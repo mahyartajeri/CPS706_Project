@@ -112,7 +112,14 @@ const edges = [{
         "color": "black",
     }
 ];
-
+let DVgraph = { 0:{1:3, 3:9, 2:1, 1:1},
+1:{0:3, 3:1, 0:1},
+2:{0:1, 3:4, 5:4, 0:1},
+3:{0:9, 1:1, 2:4},
+4:{5:4, 6:9},
+5:{4:4, 6:5, 2:4, 5:3, 6:3},
+6:{5:5, 4:9, 5:3},
+};
 const actions = [];
 let processedNodes = [];
 let unprocessedNodes = [];
@@ -134,6 +141,7 @@ let draggingNode = null;
 let lastAction = null;
 let running = false;
 let Dijsktra = [];
+
 
 function getNodeIndex(x, y) {
     for (let i = 0; i < nodes.length; i++) {
@@ -170,6 +178,7 @@ canvas.addEventListener("mousedown", event => {
             size: 50
         };
         nodes.push(node);
+        DVgraph[nodes.length-1] = {};
         lastAction = {
             type: "addNode",
             data: {
@@ -275,10 +284,14 @@ addEdgeButton.addEventListener("click", () => {
             color: "black",
         };
         edges.push(edge);
+        DVgraph[start][end] = cost;
+        DVgraph[end][start] = cost;
         lastAction = {
             type: "addEdge",
             data: {
-                index: edges.length - 1
+                index: edges.length - 1,
+                start: start,
+                end: end
             }
         };
         actions.push(lastAction);
@@ -308,9 +321,12 @@ undoButton.addEventListener("click", () => {
         switch (action.type) {
             case "addNode":
                 nodes.splice(action.data.index, 1);
+                delete DVgraph[action.data.index];
                 break;
             case "addEdge":
                 edges.splice(action.data.index, 1);
+                delete DVgraph[action.data.start][action.data.end];
+                delete DVgraph[action.data.end][action.data.start];
                 break;
             case "dragNode":
                 const node = nodes[action.data.index];
@@ -514,5 +530,32 @@ function minCost(n1, n2) {
     return min;
 }
 
+function DvAlgorithm(source) {
+    const distances = {};
+    const predecessors = {};
+    // initialize
+    for (const vertex in DVgraph) {
+      distances[vertex] = Infinity;
+      predecessors[vertex] = null;
+    }
+  
+    // set the distance to the source to 0
+    distances[source] = 0;
+  
+    // iterate over DVgraph 
+    for (let i = 0; i < Object.keys(DVgraph).length - 1; i++) {
+      for (const vertex in DVgraph) {
+        for (const neighbor in DVgraph[vertex]) {
+          const distanceThroughVertex = distances[vertex] + DVgraph[vertex][neighbor];
+          if (distanceThroughVertex < distances[neighbor]) {
+            distances[neighbor] = distanceThroughVertex;
+            predecessors[neighbor] = vertex;
+          }
+        }
+      }
+    }
+  
+    return { distances, predecessors };
+  }
 draw();
 draw();
