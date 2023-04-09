@@ -287,12 +287,21 @@ function RunDijkstra(start, end){
         }
         )
         processedNodes.push(current);
-        console.log(unprocessedNodes.length);
         unprocessedNodes.splice(unprocessedNodes.indexOf(current),1);
         current = updateCurrent();
-        console.log(unprocessedNodes.length);
     }
-    console.log(Dijsktra);
+    let route = [];
+    let distance = Dijsktra[end].distance
+    route.push(end);
+    while(route[route.length-1] != start){
+        route.push(Dijsktra[end].PreviousVertex);
+        end = Dijsktra[end].PreviousVertex;
+    }
+    route.reverse();
+    console.log("The shortest path is ");
+    console.log(route.join('->'));
+    console.log("And the distance is ");
+    console.log(distance);
 }
 function initializeDijstra(start){
     Dijsktra= [];
@@ -322,6 +331,5 @@ function updateCurrent(){
             lowest = unprocessedNodes[i];
         }
     }
-        
     return lowest;
 }
