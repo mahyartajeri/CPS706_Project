@@ -112,14 +112,7 @@ const edges = [{
         "color": "black",
     }
 ];
-let DVgraph = { 0:{1:3, 3:9, 2:1, 1:1},
-1:{0:3, 3:1, 0:1},
-2:{0:1, 3:4, 5:4, 0:1},
-3:{0:9, 1:1, 2:4},
-4:{5:4, 6:9},
-5:{4:4, 6:5, 2:4, 5:3, 6:3},
-6:{5:5, 4:9, 5:3},
-};
+
 const actions = [];
 let processedNodes = [];
 let unprocessedNodes = [];
@@ -140,7 +133,12 @@ let animationCallback = null;
 let draggingNode = null;
 let lastAction = null;
 let running = false;
+
+// Djikstra Global
 let Dijsktra = [];
+
+// Bellman-Ford Global
+let DVgraph = {};
 
 
 function getNodeIndex(x, y) {
@@ -178,7 +176,7 @@ canvas.addEventListener("mousedown", event => {
             size: 50
         };
         nodes.push(node);
-        DVgraph[nodes.length-1] = {};
+        DVgraph[nodes.length - 1] = {};
         lastAction = {
             type: "addNode",
             data: {
@@ -223,6 +221,24 @@ centralize.addEventListener("click", () => {
     }
 });
 
+decentralize.addEventListener("click", () => {
+    const start = parseInt(prompt("Enter start node index:"));
+    if (!isNaN(start) &&
+        start >= 0 && start < nodes.length) {
+        toggleAnimationMode();
+        let info = DvAlgorithm(start);
+        animationStack = animationStack.concat(info.searching.reverse());
+
+        animationCallback = (costs = info.distances) => {
+            nodes.forEach((node, i) => {
+                context.fillStyle = "green";
+                context.textAlign = 'center'
+                context.fillText("Cost: " + costs[i], node.x + 35, node.y + 35);
+            })
+        }
+    }
+})
+
 function toggleAnimationMode() {
     running = !running;
     addEdgeButton.disabled = running;
@@ -243,7 +259,7 @@ function toggleAnimationMode() {
 
 function finishAnimation() {
     stepButton.disabled = true;
-    animationCallback();
+    if (typeof animationCallback === "function") animationCallback();
     animationCallback = null;
 }
 
@@ -531,31 +547,75 @@ function minCost(n1, n2) {
 }
 
 function DvAlgorithm(source) {
+    initializeDv();
     const distances = {};
     const predecessors = {};
+
     // initialize
     for (const vertex in DVgraph) {
-      distances[vertex] = Infinity;
-      predecessors[vertex] = null;
+        distances[vertex] = Infinity;
+        predecessors[vertex] = null;
     }
-  
+
     // set the distance to the source to 0
     distances[source] = 0;
-  
+
+    // Edge path for animation
+    searchPath = [];
+
     // iterate over DVgraph 
     for (let i = 0; i < Object.keys(DVgraph).length - 1; i++) {
-      for (const vertex in DVgraph) {
-        for (const neighbor in DVgraph[vertex]) {
-          const distanceThroughVertex = distances[vertex] + DVgraph[vertex][neighbor];
-          if (distanceThroughVertex < distances[neighbor]) {
-            distances[neighbor] = distanceThroughVertex;
-            predecessors[neighbor] = vertex;
-          }
+        for (const vertex in DVgraph) {
+            for (const neighbor in DVgraph[vertex]) {
+                const distanceThroughVertex = distances[vertex] + DVgraph[vertex][neighbor];
+                if (distanceThroughVertex < distances[neighbor]) {
+                    distances[neighbor] = distanceThroughVertex;
+                    predecessors[neighbor] = vertex;
+                    searchPath.push(
+                        edges.indexOf(
+                            edges.find(
+                                edge => (edge.start === parseInt(vertex) &&
+                                    edge.end === parseInt(neighbor) &&
+                                    edge.cost === minCost(parseInt(vertex), parseInt(neighbor))) ||
+                                (edge.end === parseInt(vertex) &&
+                                    edge.start === parseInt(neighbor) &&
+                                    edge.cost === minCost(parseInt(vertex), parseInt(neighbor))
+                                )
+                            )
+                        )
+                    );
+                }
+            }
         }
-      }
     }
-  
-    return { distances, predecessors };
-  }
+
+    return {
+        distances,
+        predecessors,
+        searching: searchPath,
+    };
+}
+
+function initializeDv() {
+    DVgraph = {};
+    nodes.forEach((node, i) => DVgraph[i] = {});
+    edges.forEach((edge) => {
+
+        if (DVgraph[edge.start][edge.end]) {
+            if (edge.cost < DVgraph[edge.start][edge.end]) {
+                DVgraph[edge.start][edge.end] = edge.cost;
+            }
+        } else {
+            DVgraph[edge.start][edge.end] = edge.cost;
+        }
+        if (DVgraph[edge.end][edge.start]) {
+            if (edge.cost < DVgraph[edge.end][edge.start]) {
+                DVgraph[edge.end][edge.start] = edge.cost;
+            }
+        } else {
+            DVgraph[edge.end][edge.start] = edge.cost;
+        }
+    })
+}
 draw();
 draw();
