@@ -441,6 +441,7 @@ function drawEdge(edge) {
     }
     // Self Edge
     else {
+        context.fillStyle = "black";
         context.beginPath();
         context.ellipse(start.x + 25, start.y + 25, 30 + 15 * index, 25 + 15 * index, Math.PI / 4, 0, Math.PI * 2);
         context.stroke();
