@@ -263,8 +263,8 @@ function distanceBetweenNodes(x1, y1, x2, y2) {
 
 
 centralize.addEventListener("click", () => {
-    const start = parseInt(prompt("Enter start node index:"));
-    const end = parseInt(prompt("Enter end node index:"));
+    const start = parseInt(prompt("Enter start node index:").match(/\d+/)[0]);
+    const end = parseInt(prompt("Enter end node index:").match(/\d+/)[0]);
     if (!isNaN(start) && !isNaN(end) &&
         start >= 0 && start < nodes.length && end >= 0 && end < nodes.length && start != end) {
         let paths = RunDijkstra(start, end);
@@ -283,7 +283,7 @@ centralize.addEventListener("click", () => {
 });
 
 decentralize.addEventListener("click", () => {
-    const start = parseInt(prompt("Enter start node index:"));
+    const start = parseInt(prompt("Enter start node index:").match(/\d+/)[0]);
     if (!isNaN(start) &&
         start >= 0 && start < nodes.length) {
         toggleAnimationMode();
