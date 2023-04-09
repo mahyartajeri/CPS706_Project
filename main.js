@@ -121,6 +121,7 @@ const clearButton = document.getElementById("clear");
 const undoButton = document.getElementById("undo");
 const decentralize = document.getElementById("run_Bellman_algorithm");
 const centralize = document.getElementById("run_Dijkstra_algorithm");
+const randomGraphButton = document.getElementById("randomGraph");
 
 // Animation Buttons
 const stepButton = document.getElementById("stepButton");
@@ -157,7 +158,7 @@ canvas.addEventListener("mousedown", event => {
     const x = event.offsetX;
     const y = event.offsetY;
     const nodeIndex = getNodeIndex(x, y);
-    if (nodeIndex !== -1) {
+    if (nodeIndex !== -1 && !running) {
         draggingNode = nodes[nodeIndex];
         lastAction = {
             type: "dragNode",
@@ -204,14 +205,74 @@ canvas.addEventListener("mouseup", event => {
     draggingNode = null;
 });
 
+randomGraphButton.addEventListener("click", () => {
+    lastAction = {
+        type: "clear",
+        data: {
+            nodes: [...nodes],
+            edges: [...edges]
+        }
+    };
+    nodes.length = 0;
+    edges.length = 0;
+
+    actions.push(lastAction);
+
+    const numNodes = Math.floor(Math.random() * 12 + 3)
+    const minDistance = 100;
+    const margin = 50;
+    const innerWidth = canvas.width - margin * 2;
+    const innerHeight = canvas.height - margin * 2;
+    for (let i = 0; i < numNodes; i++) {
+        let x, y;
+        do {
+            x = Math.random() * innerWidth + margin;
+            y = Math.random() * innerHeight + margin;
+
+            tooClose = nodes.some(node => {
+                return distanceBetweenNodes(x, y, node.x, node.y) < minDistance;
+            });
+        }
+        while (tooClose);
+
+        nodes.push({
+            x: x,
+            y: y,
+            size: 50,
+        });
+    }
+
+    // Max number of edges is n(n-1)/2
+    const numEdges = Math.floor(Math.random() * ((numNodes * (numNodes - 1)) / 2));
+    const maxCost = 100;
+    for (let i = 0; i < numEdges; i++) {
+        edges.push({
+            start: Math.floor(Math.random() * numNodes),
+            end: Math.floor(Math.random() * numNodes),
+            cost: Math.floor(Math.random() * maxCost),
+            color: "black",
+        })
+    }
+    console.log(isConnected());
+    draw();
+})
+
+function distanceBetweenNodes(x1, y1, x2, y2) {
+    return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
+}
+
 
 centralize.addEventListener("click", () => {
     const start = parseInt(prompt("Enter start node index:"));
     const end = parseInt(prompt("Enter end node index:"));
     if (!isNaN(start) && !isNaN(end) &&
         start >= 0 && start < nodes.length && end >= 0 && end < nodes.length && start != end) {
-        toggleAnimationMode();
         let paths = RunDijkstra(start, end);
+        if (paths === "error") {
+            alert("Please use a connected graph for Djikstra's Algorithim");
+            return;
+        }
+        toggleAnimationMode();
         animationStack = animationStack.concat(paths.searching.reverse());
         console.log(paths.answer);
         animationCallback = (ans = paths.answer) => {
@@ -246,6 +307,7 @@ function toggleAnimationMode() {
     undoButton.disabled = running;
     decentralize.disabled = running;
     centralize.disabled = running;
+    randomGraphButton.disabled = running;
 
     if (running) {
         stepButton.style.display = "inline-block";
@@ -457,6 +519,7 @@ function draw() {
 
 function RunDijkstra(start, end) {
     initializeDijstra(start);
+    if (!isConnected()) return "error";
     let current = start;
     let searchPath = [];
     while (unprocessedNodes.length != 0) {
@@ -547,6 +610,43 @@ function minCost(n1, n2) {
 
     return min;
 }
+
+function isConnected() {
+    // Create an adjacency list from the edges array
+    const adjacencyList = {};
+    for (const node of Object.keys(nodes)) {
+        adjacencyList[parseInt(node)] = [];
+    }
+    for (const edge of edges) {
+        adjacencyList[edge.start].push(edge.end);
+        adjacencyList[edge.end].push(edge.start);
+    }
+
+    // Perform a DFS traversal starting from any node
+    const visited = {};
+    for (const node of nodes) {
+        visited[node] = false;
+    }
+    dfs(Object.keys(nodes)[0], visited, adjacencyList);
+
+    // Check if all nodes were visited
+    for (const node of Object.keys(nodes)) {
+        if (!visited[node]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function dfs(node, visited, adjacencyList) {
+    visited[node] = true;
+    for (const neighbor of adjacencyList[node]) {
+        if (!visited[neighbor]) {
+            dfs(neighbor, visited, adjacencyList);
+        }
+    }
+}
+
 
 function DvAlgorithm(source) {
     initializeDv();
