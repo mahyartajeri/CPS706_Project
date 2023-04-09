@@ -24,17 +24,17 @@ const nodes = [{
         "size": 50
     },
     {
-        "x": 700,
+        "x": 750,
         "y": 250,
         "size": 50
     },
     {
-        "x": 600,
+        "x": 650,
         "y": 400,
         "size": 50
     },
     {
-        "x": 600,
+        "x": 750,
         "y": 100,
         "size": 50
     }
@@ -91,6 +91,24 @@ const edges = [{
         "start": 5,
         "end": 2,
         "cost": 4,
+        "color": "black",
+    },
+    {
+        "start": 5,
+        "end": 5,
+        "cost": 3,
+        "color": "black",
+    },
+    {
+        "start": 1,
+        "end": 0,
+        "cost": 1,
+        "color": "black",
+    },
+    {
+        "start": 5,
+        "end": 6,
+        "cost": 3,
         "color": "black",
     }
 ];
@@ -220,7 +238,7 @@ function finishAnimation() {
     animationCallback = null;
 }
 
-function animateEdge(callbackFunction) {
+function animateEdge() {
     if (animationStack.length == 0) {
         finishAnimation();
         return;
@@ -353,14 +371,48 @@ function drawNode(node) {
 
 function drawEdge(edge) {
     edge.color != "black" ? context.lineWidth = 5 : context.lineWidth = 1;
+    context.strokeStyle = edge.color;
     const start = nodes[edge.start];
     const end = nodes[edge.end];
     context.beginPath();
     context.moveTo(start.x, start.y);
-    context.lineTo(end.x, end.y);
-    context.strokeStyle = edge.color;
-    context.stroke();
-    context.fillText(edge.cost, (start.x + end.x) / 2, (start.y + end.y) / 2);
+
+    // Can be multiple edges between two nodes (or even multiple self edges)
+    index = edges.filter((e) => (e.start === edge.start && e.end === edge.end) || (e.start === edge.end && e.end === edge.start)).indexOf(edge);
+    // Normal Edge
+    if (edge.start !== edge.end) {
+        const controlX = (start.x + end.x) / (2 + index);
+        const controlY = (start.y + end.y) / (2 + index);
+        context.quadraticCurveTo(controlX, controlY, end.x, end.y);
+        context.stroke();
+
+
+        const text = edge.cost;
+        const textWidth = context.measureText(text).width - 15;
+        const t = 0.5; // Set t value to midpoint of curve
+        const midX = (1 - t) * (1 - t) * start.x + 2 * (1 - t) * t * controlX + t * t * end.x;
+        const midY = (1 - t) * (1 - t) * start.y + 2 * (1 - t) * t * controlY + t * t * end.y;
+        const dx = end.x - start.x;
+        const dy = end.y - start.y;
+        const slope = -dx / dy; // Calculate slope of tangent
+        //const angle = Math.atan(slope); // Calculate angle of rotation
+        context.save();
+        context.translate(midX, midY);
+        //context.rotate(angle);
+        context.fillStyle = "white";
+        context.fillRect(-textWidth / 2 - 10, -10, 20, 20);
+        context.fillStyle = "black";
+        context.fillText(text, -textWidth / 2, 7);
+        context.restore();
+
+    }
+    // Self Edge
+    else {
+        context.beginPath();
+        context.ellipse(start.x + 25, start.y + 25, 30 + 15 * index, 25 + 15 * index, Math.PI / 4, 0, Math.PI * 2);
+        context.stroke();
+        context.fillText(edge.cost, start.x + 60 + 15 * index, start.y + 60 + 15 * index);
+    }
 }
 
 function draw() {
@@ -414,7 +466,7 @@ function RunDijkstra(start, end) {
     // I think it's better to animate after the function than during
     return {
         searching: searchPath,
-        answer: route.reduce((acc, curr, i) => (i > 0) ? [...acc, edges.indexOf(edges.find(edge => ((edge.start === route[i - 1] && edge.end === curr) || (edge.end === route[i - 1] && edge.start === curr))))] : acc, []),
+        answer: route.reduce((acc, curr, i) => (i > 0) ? [...acc, edges.indexOf(edges.find(edge => ((edge.start === route[i - 1] && edge.end === curr && edge.cost === minCost(route[i - 1], curr)) || (edge.end === route[i - 1] && edge.start === curr && edge.cost === minCost(route[i - 1], curr)))))] : acc, []),
     };
 }
 
@@ -450,4 +502,17 @@ function updateCurrent() {
     return lowest;
 }
 
+function minCost(n1, n2) {
+    if (n1 === n2) return 0;
+    min = Infinity;
+    edges.forEach((edge) => {
+        if ((edge.start === n1 && edge.end === n2) || (edge.start === n2 && edge.end === n1)) {
+            if (edge.cost < min) min = edge.cost;
+        }
+    })
+
+    return min;
+}
+
+draw();
 draw();
