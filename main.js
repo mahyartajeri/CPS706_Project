@@ -3,8 +3,7 @@ const context = canvas.getContext("2d");
 
 context.font = "20pt Consolas"
 
-const nodes = [
-    {
+const nodes = [{
         "x": 157,
         "y": 440,
         "size": 50
@@ -25,31 +24,35 @@ const nodes = [
         "size": 50
     }
 ];
-const edges = [
-    {
+const edges = [{
         "start": 0,
         "end": 1,
-        "cost": 3
+        "cost": 3,
+        "color": "black",
     },
     {
         "start": 0,
         "end": 3,
-        "cost": 7
+        "cost": 7,
+        "color": "black",
     },
     {
         "start": 0,
         "end": 2,
-        "cost": 1
+        "cost": 1,
+        "color": "black",
     },
     {
         "start": 1,
         "end": 3,
-        "cost": 1
+        "cost": 1,
+        "color": "black",
     },
     {
         "start": 2,
         "end": 3,
-        "cost": 4
+        "cost": 4,
+        "color": "black",
     }
 ];
 
@@ -61,6 +64,14 @@ const clearButton = document.getElementById("clear");
 const undoButton = document.getElementById("undo");
 const decentralize = document.getElementById("run_Bellman_algorithm");
 const centralize = document.getElementById("run_Dijkstra_algorithm");
+
+// Animation Buttons
+const stepButton = document.getElementById("stepButton");
+const exitButton = document.getElementById("exitButton");
+
+// Animation global
+let animationStack = [];
+let animationCallback = null;
 
 let draggingNode = null;
 let lastAction = null;
@@ -133,15 +144,61 @@ centralize.addEventListener("click", () => {
     const start = parseInt(prompt("Enter start node index:"));
     const end = parseInt(prompt("Enter end node index:"));
     if (!isNaN(start) && !isNaN(end) &&
-    start >= 0 && start < nodes.length && end >= 0 && end < nodes.length && start != end ){
-        if(!running){
-            running = true;
-
+        start >= 0 && start < nodes.length && end >= 0 && end < nodes.length && start != end) {
+        toggleAnimationMode();
+        let paths = RunDijkstra(start, end);
+        animationStack = animationStack.concat(paths.searching.reverse());
+        animationCallback = (ans = paths.answer) => {
+            ans.forEach(i => edges[i].color = "green");
+            draw();
         }
+    }
+});
 
+function toggleAnimationMode() {
+    running = !running;
+    addEdgeButton.disabled = running;
+    clearButton.disabled = running;
+    undoButton.disabled = running;
+    decentralize.disabled = running;
+    centralize.disabled = running;
+
+    if (running) {
+        stepButton.style.display = "inline-block";
+        stepButton.disabled = false;
+        exitButton.style.display = "inline-block";
+    } else {
+        stepButton.style.display = "none";
+        exitButton.style.display = "none";
     }
 }
-);
+
+function finishAnimation() {
+    stepButton.disabled = true;
+    animationCallback();
+    animationCallback = null;
+}
+
+function animateEdge(callbackFunction) {
+    if (animationStack.length == 0) {
+        finishAnimation();
+        return;
+    }
+    edges[animationStack.pop()].color = "red";
+    draw();
+}
+
+stepButton.addEventListener("click", () => {
+    animateEdge();
+})
+
+exitButton.addEventListener("click", () => {
+    toggleAnimationMode();
+    edges.forEach(edge => edge.color = "black");
+    draw();
+})
+
+
 
 addEdgeButton.addEventListener("click", () => {
     const start = parseInt(prompt("Enter start node index:"));
@@ -155,7 +212,8 @@ addEdgeButton.addEventListener("click", () => {
         const edge = {
             start,
             end,
-            cost
+            cost,
+            color: "black",
         };
         edges.push(edge);
         lastAction = {
@@ -239,10 +297,12 @@ document.addEventListener("keydown", event => {
 })
 
 function drawNode(node) {
+    context.lineWidth = 1;
     context.beginPath();
     context.arc(node.x, node.y, node.size / 2, 0, 2 * Math.PI);
     context.fillStyle = "white";
     context.fill();
+    context.strokeStyle = "black";
     context.stroke();
     context.fillStyle = "black";
     context.textAlign = 'center'
@@ -251,11 +311,13 @@ function drawNode(node) {
 }
 
 function drawEdge(edge) {
+    edge.color != "black" ? context.lineWidth = 5 : context.lineWidth = 1;
     const start = nodes[edge.start];
     const end = nodes[edge.end];
     context.beginPath();
     context.moveTo(start.x, start.y);
     context.lineTo(end.x, end.y);
+    context.strokeStyle = edge.color;
     context.stroke();
     context.fillText(edge.cost, (start.x + end.x) / 2, (start.y + end.y) / 2);
 }
@@ -265,35 +327,37 @@ function draw() {
     nodes.forEach(drawNode);
     edges.forEach(drawEdge);
 }
-function RunDijkstra(start, end){
+
+function RunDijkstra(start, end) {
     initializeDijstra(start);
     let current = start;
-    while(unprocessedNodes.length != 0){
+    let searchPath = [];
+    while (unprocessedNodes.length != 0) {
 
-        edges.forEach( edge =>{
-            if(edge.start == current){
-                if(Dijsktra[edge.end].distance > Dijsktra[current].distance + edge.cost || Dijsktra[edge.end].distance == -1){
+        edges.forEach(edge => {
+            if (edge.start == current) {
+                if (Dijsktra[edge.end].distance > Dijsktra[current].distance + edge.cost || Dijsktra[edge.end].distance == -1) {
                     Dijsktra[edge.end].distance = Dijsktra[current].distance + edge.cost;
                     Dijsktra[edge.end].PreviousVertex = current;
+                    searchPath.push(edges.indexOf(edge));
                 }
-                
-            }
-            else if (edge.end == current){
-                if(Dijsktra[edge.start].distance > Dijsktra[current].distance + edge.cost || Dijsktra[edge.start].distance == -1){
+
+            } else if (edge.end == current) {
+                if (Dijsktra[edge.start].distance > Dijsktra[current].distance + edge.cost || Dijsktra[edge.start].distance == -1) {
                     Dijsktra[edge.start].distance = Dijsktra[current].distance + edge.cost;
                     Dijsktra[edge.start].PreviousVertex = current;
+                    searchPath.push(edges.indexOf(edge));
                 }
             }
-        }
-        )
+        })
         processedNodes.push(current);
-        unprocessedNodes.splice(unprocessedNodes.indexOf(current),1);
+        unprocessedNodes.splice(unprocessedNodes.indexOf(current), 1);
         current = updateCurrent();
     }
     let route = [];
     let distance = Dijsktra[end].distance
     route.push(end);
-    while(route[route.length-1] != start){
+    while (route[route.length - 1] != start) {
         route.push(Dijsktra[end].PreviousVertex);
         end = Dijsktra[end].PreviousVertex;
     }
@@ -302,19 +366,27 @@ function RunDijkstra(start, end){
     console.log(route.join('->'));
     console.log("And the distance is ");
     console.log(distance);
+
+    // Will use these for the animation.
+    // I think it's better to animate after the function than during
+
+    return {
+        searching: searchPath,
+        answer: route.reduce((acc, curr, i) => (i > 0) ? [...acc, edges.indexOf(edges.find(edge => (edge.start === route[i - 1] && edge.end === curr)))] : acc, []),
+    };
 }
-function initializeDijstra(start){
-    Dijsktra= [];
+
+function initializeDijstra(start) {
+    Dijsktra = [];
     for (let i = 0; i < nodes.length; i++) {
-        if (i == start){
+        if (i == start) {
             const node = {
                 distance: 0,
                 PreviousVertex: null
             }
             Dijsktra.push(node);
             unprocessedNodes.push(i);
-        }
-        else{
+        } else {
             const node = {
                 distance: -1,
                 PreviousVertex: null
@@ -322,14 +394,17 @@ function initializeDijstra(start){
             Dijsktra.push(node);
             unprocessedNodes.push(i);
         }
-    }    
+    }
 }
-function updateCurrent(){
+
+function updateCurrent() {
     let lowest = unprocessedNodes[0];
-    for (let i = 1; i < unprocessedNodes.length; i++){
-        if(Dijsktra[unprocessedNodes[i]].distance < Dijsktra[lowest].distance && Dijsktra[unprocessedNodes[i]].distance != -1){
+    for (let i = 1; i < unprocessedNodes.length; i++) {
+        if (Dijsktra[unprocessedNodes[i]].distance < Dijsktra[lowest].distance && Dijsktra[unprocessedNodes[i]].distance != -1) {
             lowest = unprocessedNodes[i];
         }
     }
     return lowest;
 }
+
+draw();
