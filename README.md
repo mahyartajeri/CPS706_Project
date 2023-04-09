@@ -5,9 +5,9 @@
 - [x] Implement node creation and visualization
 - [x] Add support for edge connections between nodes
 - [x] Add Djikstra
-- [ ] Add Bellman-Ford
+- [x] Add Bellman-Ford
 - [ ] Animate Djikstra ⏳
-- [ ] Animate Bellman-Ford
+- [ ] Animate Bellman-Ford ⏳
 - [ ] Implement cost calculation for data transfer between nodes
 - [ ] Test and debug the application
 - [ ] Add additional features (if time permits)
