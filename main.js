@@ -22,6 +22,21 @@ const nodes = [{
         "x": 539,
         "y": 256,
         "size": 50
+    },
+    {
+        "x": 700,
+        "y": 250,
+        "size": 50
+    },
+    {
+        "x": 600,
+        "y": 400,
+        "size": 50
+    },
+    {
+        "x": 600,
+        "y": 100,
+        "size": 50
     }
 ];
 const edges = [{
@@ -33,7 +48,7 @@ const edges = [{
     {
         "start": 0,
         "end": 3,
-        "cost": 7,
+        "cost": 9,
         "color": "black",
     },
     {
@@ -51,6 +66,30 @@ const edges = [{
     {
         "start": 2,
         "end": 3,
+        "cost": 4,
+        "color": "black",
+    },
+    {
+        "start": 4,
+        "end": 5,
+        "cost": 4,
+        "color": "black",
+    },
+    {
+        "start": 5,
+        "end": 6,
+        "cost": 5,
+        "color": "black",
+    },
+    {
+        "start": 6,
+        "end": 4,
+        "cost": 9,
+        "color": "black",
+    },
+    {
+        "start": 5,
+        "end": 2,
         "cost": 4,
         "color": "black",
     }
@@ -106,6 +145,7 @@ canvas.addEventListener("mousedown", event => {
         };
         console.log("node dragged!", lastAction)
     } else {
+        if (running) return;
         const node = {
             x,
             y,
@@ -148,6 +188,7 @@ centralize.addEventListener("click", () => {
         toggleAnimationMode();
         let paths = RunDijkstra(start, end);
         animationStack = animationStack.concat(paths.searching.reverse());
+        console.log(paths.answer);
         animationCallback = (ans = paths.answer) => {
             ans.forEach(i => edges[i].color = "green");
             draw();
@@ -306,7 +347,7 @@ function drawNode(node) {
     context.stroke();
     context.fillStyle = "black";
     context.textAlign = 'center'
-    context.fillText(nodes.indexOf(node), node.x, node.y + node.size / 6);
+    context.fillText("N" + nodes.indexOf(node), node.x, node.y + node.size / 6);
 
 }
 
@@ -324,8 +365,8 @@ function drawEdge(edge) {
 
 function draw() {
     context.clearRect(0, 0, canvas.width, canvas.height);
-    nodes.forEach(drawNode);
     edges.forEach(drawEdge);
+    nodes.forEach(drawNode);
 }
 
 function RunDijkstra(start, end) {
@@ -336,14 +377,14 @@ function RunDijkstra(start, end) {
 
         edges.forEach(edge => {
             if (edge.start == current) {
-                if (Dijsktra[edge.end].distance > Dijsktra[current].distance + edge.cost || Dijsktra[edge.end].distance == -1) {
+                if (Dijsktra[edge.end].distance > Dijsktra[current].distance + edge.cost || Dijsktra[edge.end].distance == Infinity) {
                     Dijsktra[edge.end].distance = Dijsktra[current].distance + edge.cost;
                     Dijsktra[edge.end].PreviousVertex = current;
                     searchPath.push(edges.indexOf(edge));
                 }
 
             } else if (edge.end == current) {
-                if (Dijsktra[edge.start].distance > Dijsktra[current].distance + edge.cost || Dijsktra[edge.start].distance == -1) {
+                if (Dijsktra[edge.start].distance > Dijsktra[current].distance + edge.cost || Dijsktra[edge.start].distance == Infinity) {
                     Dijsktra[edge.start].distance = Dijsktra[current].distance + edge.cost;
                     Dijsktra[edge.start].PreviousVertex = current;
                     searchPath.push(edges.indexOf(edge));
@@ -357,26 +398,28 @@ function RunDijkstra(start, end) {
     let route = [];
     let distance = Dijsktra[end].distance
     route.push(end);
+
     while (route[route.length - 1] != start) {
         route.push(Dijsktra[end].PreviousVertex);
         end = Dijsktra[end].PreviousVertex;
+        console.log(end);
     }
     route.reverse();
     console.log("The shortest path is ");
     console.log(route.join('->'));
     console.log("And the distance is ");
     console.log(distance);
-
+    console.log("ROUTE", route);
     // Will use these for the animation.
     // I think it's better to animate after the function than during
-
     return {
         searching: searchPath,
-        answer: route.reduce((acc, curr, i) => (i > 0) ? [...acc, edges.indexOf(edges.find(edge => (edge.start === route[i - 1] && edge.end === curr)))] : acc, []),
+        answer: route.reduce((acc, curr, i) => (i > 0) ? [...acc, edges.indexOf(edges.find(edge => ((edge.start === route[i - 1] && edge.end === curr) || (edge.end === route[i - 1] && edge.start === curr))))] : acc, []),
     };
 }
 
 function initializeDijstra(start) {
+    processedNodes = [];
     Dijsktra = [];
     for (let i = 0; i < nodes.length; i++) {
         if (i == start) {
@@ -388,7 +431,7 @@ function initializeDijstra(start) {
             unprocessedNodes.push(i);
         } else {
             const node = {
-                distance: -1,
+                distance: Infinity,
                 PreviousVertex: null
             }
             Dijsktra.push(node);
@@ -400,7 +443,7 @@ function initializeDijstra(start) {
 function updateCurrent() {
     let lowest = unprocessedNodes[0];
     for (let i = 1; i < unprocessedNodes.length; i++) {
-        if (Dijsktra[unprocessedNodes[i]].distance < Dijsktra[lowest].distance && Dijsktra[unprocessedNodes[i]].distance != -1) {
+        if (Dijsktra[unprocessedNodes[i]].distance < Dijsktra[lowest].distance && Dijsktra[unprocessedNodes[i]].distance != Infinity) {
             lowest = unprocessedNodes[i];
         }
     }
