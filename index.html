@@ -4,26 +4,52 @@
     <head>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
             integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+        </script>
         <meta charset="utf-8">
         <title>Network Routing Simulator</title>
         <link rel="stylesheet" href="styles.css">
     </head>
 
-    <body>
-        <p align="center">
-            <canvas id="canvas" width="1000" height="600"></canvas>
-        </p>
-        <div class="p-3" align="center">
-            <button class="btn btn-info" id="randomGraph">Generate Random Graph</button>
-            <button class="btn btn-primary" id="addEdge">Add Edge</button>
-            <button class="btn btn-warning" id="undo">Undo</button>
-            <button class="btn btn-danger" id="clear">Clear</button>
-            <button class="btn btn-secondary" id="run_Dijkstra_algorithm"> Run Centralized routing Algorithm </button>
-            <button class="btn btn-dark" id="run_Bellman_algorithm"> Run Decentralized routing Algorithm</button>
+    <body class="container-fluid">
+        <div class="row">
+            <div class="col-xxl-8">
+                <canvas id="canvas" width="900" height="600"></canvas>
+            </div>
+            <div id="infoDiv" class="col-xxl-2" style="display: none;">
+                <h1 id="infoTitle">Algo Info</h1>
+                <div id="tableDiv">
+                    <table id="infoTable" class="table table-striped px-5">
+                        <thead>
+                            <tr>
+                                <th>Vertex</th>
+                                <th>Distance</th>
+                                <th>Predecessor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="p-3" align="center">
-            <button class="btn btn-success" id="stepButton" style="display: none;">Step</button>
-            <button class="btn btn-danger" id="exitButton" style="display: none;">Exit Animation</button>
+        <div>
+            <div class="p-3" align="center">
+                <button class="btn btn-info" id="randomGraph">Generate Random Graph</button>
+                <button class="btn btn-primary" id="addEdge">Add Edge</button>
+                <button class="btn btn-warning" id="undo">Undo</button>
+                <button class="btn btn-danger" id="clear">Clear</button>
+                <button class="btn btn-secondary" id="run_Dijkstra_algorithm">Dijkstra (Centralized routing Algorithm)
+                </button>
+                <button class="btn btn-dark" id="run_Bellman_algorithm"> Bellman-Ford (Decentralized routing
+                    Algorithm)</button>
+            </div>
+            <div class="p-3" align="center">
+                <button class="btn btn-success" id="stepButton" style="display: none;">Step</button>
+                <button class="btn btn-danger" id="exitButton" style="display: none;">Exit Animation</button>
+            </div>
         </div>
         <script src="main.js"></script>
     </body>

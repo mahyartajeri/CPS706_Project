@@ -127,13 +127,21 @@ const randomGraphButton = document.getElementById("randomGraph");
 const stepButton = document.getElementById("stepButton");
 const exitButton = document.getElementById("exitButton");
 
-// Animation global
+// Animation Info Div
+const animationInfoDiv = document.getElementById("infoDiv");
+const infoTitle = document.getElementById("infoTitle");
+const infoTable = document.querySelector("#infoTable tbody");
+
+// Animation globals
 let animationStack = [];
 let animationCallback = null;
+let infoTableStacks = {};
+let running = false;
 
+// Canvas globals
 let draggingNode = null;
 let lastAction = null;
-let running = false;
+
 
 // Djikstra Global
 let Dijsktra = [];
@@ -286,10 +294,15 @@ decentralize.addEventListener("click", () => {
     const start = parseInt(prompt("Enter start node index:").match(/\d+/)[0]);
     if (!isNaN(start) &&
         start >= 0 && start < nodes.length) {
-        toggleAnimationMode();
+
         let info = DvAlgorithm(start);
         animationStack = animationStack.concat(info.searching.reverse());
+        infoTableStacks = {
+            distanceStack: info.distanceHistory.reverse(),
+            predecessorStack: info.predecessorHistory.reverse()
+        }
 
+        toggleAnimationMode();
         animationCallback = (costs = info.distances) => {
             nodes.forEach((node, i) => {
                 context.fillStyle = "green";
@@ -313,9 +326,13 @@ function toggleAnimationMode() {
         stepButton.style.display = "inline-block";
         stepButton.disabled = false;
         exitButton.style.display = "inline-block";
+        animationInfoDiv.style.display = "inline-block";
+
+        initializeInfoTable();
     } else {
         stepButton.style.display = "none";
         exitButton.style.display = "none";
+        animationInfoDiv.style.display = "none";
     }
 }
 
@@ -334,8 +351,39 @@ function animateEdge() {
     draw();
 }
 
+function initializeInfoTable() {
+    firstDistances = infoTableStacks.distanceStack.pop();
+    firstPredecessors = infoTableStacks.predecessorStack.pop();
+    const numRows = nodes.length;
+    for (let i = 0; i < numRows; i++) {
+        const row = infoTable.insertRow();
+        const vertexCell = row.insertCell();
+        const distanceCell = row.insertCell();
+        const predecessorCell = row.insertCell();
+
+        vertexCell.textContent = "N" + i;
+        distanceCell.textContent = firstDistances[i];
+        predecessorCell.textContent = firstPredecessors[i];
+    }
+}
+
+function updateInfoTable() {
+    nextDistances = infoTableStacks.distanceStack.pop();
+    nextPredecessors = infoTableStacks.predecessorStack.pop();
+    const numRows = nodes.length;
+    for (let i = 0; i < numRows; i++) {
+        const distanceCell = document.querySelector("#infoTable tbody .distance:nth-of-type({" + i + "})");
+        const predecessorCell = document.querySelector("#infoTable tbody .predecessor:nth-of-type({" + i + "})");
+
+        vertexCell.textContent = "N" + i;
+        distanceCell.textContent = firstDistances[i];
+        predecessorCell.textContent = firstPredecessors[i];
+    }
+}
+
 stepButton.addEventListener("click", () => {
     animateEdge();
+    updateInfoTable();
 })
 
 exitButton.addEventListener("click", () => {
@@ -652,6 +700,8 @@ function DvAlgorithm(source) {
     initializeDv();
     const distances = {};
     const predecessors = {};
+    const predecessorHistory = [];
+    const distanceHistory = [];
 
     // initialize
     for (const vertex in DVgraph) {
@@ -659,9 +709,15 @@ function DvAlgorithm(source) {
         predecessors[vertex] = null;
     }
 
+    predecessorHistory.push({
+        ...predecessors
+    });
+
     // set the distance to the source to 0
     distances[source] = 0;
-
+    distanceHistory.push({
+        ...distances
+    });
     // Edge path for animation
     searchPath = [];
 
@@ -673,6 +729,14 @@ function DvAlgorithm(source) {
                 if (distanceThroughVertex < distances[neighbor]) {
                     distances[neighbor] = distanceThroughVertex;
                     predecessors[neighbor] = vertex;
+
+                    // For the animation/info tables
+                    predecessorHistory.push({
+                        ...predecessors
+                    });
+                    distanceHistory.push({
+                        ...distances
+                    });
                     searchPath.push(
                         edges.indexOf(
                             edges.find(
@@ -692,8 +756,8 @@ function DvAlgorithm(source) {
     }
 
     return {
-        distances,
-        predecessors,
+        predecessorHistory: predecessorHistory,
+        distanceHistory: distanceHistory,
         searching: searchPath,
     };
 }
