@@ -114,7 +114,7 @@ const edges = [{
 ];
 
 const actions = [];
-let processedNodes = [];
+//let processedNodes = [];
 let unprocessedNodes = [];
 const addEdgeButton = document.getElementById("addEdge");
 const clearButton = document.getElementById("clear");
@@ -522,17 +522,18 @@ function RunDijkstra(start, end) {
     if (!isConnected()) return "error";
     let current = start;
     let searchPath = [];
+    // iterate until no more unprocessedNodes
     while (unprocessedNodes.length != 0) {
-
+        // for each edge that is connected to current node and unprocessedNode, check if that edge imrove the distance form start to the unprocessed node
         edges.forEach(edge => {
-            if (edge.start == current) {
+            if (edge.start == current && unprocessedNodes.includes(edge.end)) {
                 if (Dijsktra[edge.end].distance > Dijsktra[current].distance + edge.cost || Dijsktra[edge.end].distance == Infinity) {
                     Dijsktra[edge.end].distance = Dijsktra[current].distance + edge.cost;
                     Dijsktra[edge.end].PreviousVertex = current;
                     searchPath.push(edges.indexOf(edge));
                 }
 
-            } else if (edge.end == current) {
+            } else if (edge.end == current && unprocessedNodes.includes(edge.start)) {
                 if (Dijsktra[edge.start].distance > Dijsktra[current].distance + edge.cost || Dijsktra[edge.start].distance == Infinity) {
                     Dijsktra[edge.start].distance = Dijsktra[current].distance + edge.cost;
                     Dijsktra[edge.start].PreviousVertex = current;
@@ -540,9 +541,10 @@ function RunDijkstra(start, end) {
                 }
             }
         })
-        processedNodes.push(current);
-        unprocessedNodes.splice(unprocessedNodes.indexOf(current), 1);
-        current = updateCurrent();
+
+        //processedNodes.push(current); // put current node
+        unprocessedNodes.splice(unprocessedNodes.indexOf(current), 1); // remove current from unprocessedNodes
+        current = updateCurrent(); // update current by finding the unprocessedNodes with the lowest distance
     }
     let route = [];
     let distance = Dijsktra[end].distance
@@ -568,9 +570,12 @@ function RunDijkstra(start, end) {
 }
 
 function initializeDijstra(start) {
-    processedNodes = [];
+    // reset unprocessedNodes, processedNodes and Dijsktra in case not empty
+    unprocessedNodes = [];
+    //processedNodes = [];
     Dijsktra = [];
     for (let i = 0; i < nodes.length; i++) {
+        // set distance in starting node to 0
         if (i == start) {
             const node = {
                 distance: 0,
@@ -578,7 +583,7 @@ function initializeDijstra(start) {
             }
             Dijsktra.push(node);
             unprocessedNodes.push(i);
-        } else {
+        } else { // otherwise to infinity
             const node = {
                 distance: Infinity,
                 PreviousVertex: null
@@ -589,7 +594,7 @@ function initializeDijstra(start) {
     }
 }
 
-function updateCurrent() {
+function updateCurrent() { // helper function for runDijstra to find next current node
     let lowest = unprocessedNodes[0];
     for (let i = 1; i < unprocessedNodes.length; i++) {
         if (Dijsktra[unprocessedNodes[i]].distance < Dijsktra[lowest].distance && Dijsktra[unprocessedNodes[i]].distance != Infinity) {
