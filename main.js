@@ -274,15 +274,23 @@ centralize.addEventListener("click", () => {
     const start = parseInt(prompt("Enter start node index:").match(/\d+/)[0]);
     const end = parseInt(prompt("Enter end node index:").match(/\d+/)[0]);
     if (!isNaN(start) && !isNaN(end) &&
-        start >= 0 && start < nodes.length && end >= 0 && end < nodes.length && start != end) {
+        start >= 0 && start < nodes.length &&
+        end >= 0 && end < nodes.length && start != end) {
         let paths = RunDijkstra(start, end);
         if (paths === "error") {
             alert("Please use a connected graph for Djikstra's Algorithim");
             return;
         }
-        toggleAnimationMode();
+
         animationStack = animationStack.concat(paths.searching.reverse());
-        console.log(paths.answer);
+        infoTableStacks = {
+            distanceStack: paths.distanceHistory.reverse(),
+            predecessorStack: paths.predecessorHistory.reverse()
+        }
+        infoTitle.innerHTML = "Djikstra Table (LIVE)";
+
+        toggleAnimationMode();
+
         animationCallback = (ans = paths.answer) => {
             ans.forEach(i => edges[i].color = "green");
             draw();
@@ -301,8 +309,9 @@ decentralize.addEventListener("click", () => {
             distanceStack: info.distanceHistory.reverse(),
             predecessorStack: info.predecessorHistory.reverse()
         }
-
+        infoTitle.innerHTML = "Bellman-Ford Table (LIVE)";
         toggleAnimationMode();
+
         animationCallback = (costs = info.distances) => {
             nodes.forEach((node, i) => {
                 context.fillStyle = "green";
@@ -352,6 +361,10 @@ function animateEdge() {
 }
 
 function initializeInfoTable() {
+    console.log("pred, dist");
+    console.log([...infoTableStacks.predecessorStack]);
+    console.log([...infoTableStacks.distanceStack]);
+    document.querySelector("#infoTable tbody").innerHTML = "";
     firstDistances = infoTableStacks.distanceStack.pop();
     firstPredecessors = infoTableStacks.predecessorStack.pop();
     const numRows = nodes.length;
@@ -361,24 +374,50 @@ function initializeInfoTable() {
         const distanceCell = row.insertCell();
         const predecessorCell = row.insertCell();
 
+        distanceCell.className = "distance";
+        distanceCell.setAttribute("last", firstDistances[i]);
+        predecessorCell.className = "predecessor";
+        if (firstPredecessors[i] !== null) {
+            predecessorCell.setAttribute("last", firstPredecessors[i]);
+        } else {
+            predecessorCell.setAttribute("last", "null");
+        }
+
         vertexCell.textContent = "N" + i;
         distanceCell.textContent = firstDistances[i];
-        predecessorCell.textContent = firstPredecessors[i];
+        predecessorCell.textContent = "null";
     }
 }
 
 function updateInfoTable() {
+    if (infoTableStacks.distanceStack.length === 0) return;
     nextDistances = infoTableStacks.distanceStack.pop();
     nextPredecessors = infoTableStacks.predecessorStack.pop();
+
+    const tableBody = document.querySelector("#infoTable tbody");
+
     const numRows = nodes.length;
     for (let i = 0; i < numRows; i++) {
-        const distanceCell = document.querySelector("#infoTable tbody .distance:nth-of-type({" + i + "})");
-        const predecessorCell = document.querySelector("#infoTable tbody .predecessor:nth-of-type({" + i + "})");
+        const distanceCell = tableBody.rows[i].cells[1];
+        const predecessorCell = tableBody.rows[i].cells[2];
 
-        vertexCell.textContent = "N" + i;
-        distanceCell.textContent = firstDistances[i];
-        predecessorCell.textContent = firstPredecessors[i];
+
+        if (Number(distanceCell.getAttribute("last")) !== nextDistances[i]) {
+            distanceCell.innerHTML = "<strike>" + distanceCell.innerHTML + "</strike> " + nextDistances[i];
+            distanceCell.setAttribute("last", nextDistances[i]);
+        }
+
+        if (parseInt(predecessorCell.getAttribute("last")) !== parseInt(nextPredecessors[i])) {
+            if (nextPredecessors[i] !== null && predecessorCell.getAttribute("last") === "null") {
+                predecessorCell.innerHTML = "<strike>" + predecessorCell.innerHTML + "</strike> N" + nextPredecessors[i];
+            } else if (nextPredecessors[i] !== null) {
+                predecessorCell.innerHTML = "<strike>" + predecessorCell.innerHTML + "</strike> N" + nextPredecessors[i];
+            }
+            predecessorCell.setAttribute("last", nextPredecessors[i]);
+        }
+
     }
+
 }
 
 stepButton.addEventListener("click", () => {
@@ -568,8 +607,26 @@ function draw() {
 function RunDijkstra(start, end) {
     initializeDijstra(start);
     if (!isConnected()) return "error";
+
     let current = start;
+
+    // For the animation/Info Table
     let searchPath = [];
+    let distanceHistory = [];
+    let predecessorHistory = [];
+
+    distanceHistory.push(Dijsktra.reduce((acc, node, i) => {
+        acc[i] = node.distance;
+        return acc;
+    }, {}));
+
+    predecessorHistory.push(Dijsktra.reduce((acc, node, i) => {
+        acc[i] = node.PreviousVertex;
+        return acc;
+    }, {}));
+
+    console.log(distanceHistory[0]);
+
     // iterate until no more unprocessedNodes
     while (unprocessedNodes.length != 0) {
         // for each edge that is connected to current node and unprocessedNode, check if that edge imrove the distance form start to the unprocessed node
@@ -578,14 +635,37 @@ function RunDijkstra(start, end) {
                 if (Dijsktra[edge.end].distance > Dijsktra[current].distance + edge.cost || Dijsktra[edge.end].distance == Infinity) {
                     Dijsktra[edge.end].distance = Dijsktra[current].distance + edge.cost;
                     Dijsktra[edge.end].PreviousVertex = current;
+
+                    // For animation/Info Table
                     searchPath.push(edges.indexOf(edge));
+                    distanceHistory.push(Dijsktra.reduce((acc, node, i) => {
+                        acc[i] = node.distance;
+                        return acc;
+                    }, {}));
+
+                    predecessorHistory.push(Dijsktra.reduce((acc, node, i) => {
+                        acc[i] = node.PreviousVertex;
+                        return acc;
+                    }, {}));
+
                 }
 
             } else if (edge.end == current && unprocessedNodes.includes(edge.start)) {
                 if (Dijsktra[edge.start].distance > Dijsktra[current].distance + edge.cost || Dijsktra[edge.start].distance == Infinity) {
                     Dijsktra[edge.start].distance = Dijsktra[current].distance + edge.cost;
                     Dijsktra[edge.start].PreviousVertex = current;
+
+                    // For animation/Info Table
                     searchPath.push(edges.indexOf(edge));
+                    distanceHistory.push(Dijsktra.reduce((acc, node, i) => {
+                        acc[i] = node.distance;
+                        return acc;
+                    }, {}));
+
+                    predecessorHistory.push(Dijsktra.reduce((acc, node, i) => {
+                        acc[i] = node.PreviousVertex;
+                        return acc;
+                    }, {}));
                 }
             }
         })
@@ -611,7 +691,10 @@ function RunDijkstra(start, end) {
     console.log("ROUTE", route);
     // Will use these for the animation.
     // I think it's better to animate after the function than during
+    console.log("traces:", distanceHistory, predecessorHistory);
     return {
+        distanceHistory: distanceHistory,
+        predecessorHistory: predecessorHistory,
         searching: searchPath,
         answer: route.reduce((acc, curr, i) => (i > 0) ? [...acc, edges.indexOf(edges.find(edge => ((edge.start === route[i - 1] && edge.end === curr && edge.cost === minCost(route[i - 1], curr)) || (edge.end === route[i - 1] && edge.start === curr && edge.cost === minCost(route[i - 1], curr)))))] : acc, []),
     };
@@ -761,6 +844,7 @@ function DvAlgorithm(source) {
     }
 
     return {
+        distances: distances,
         predecessorHistory: predecessorHistory,
         distanceHistory: distanceHistory,
         searching: searchPath,
