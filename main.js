@@ -556,7 +556,15 @@ function drawNode(node) {
     // context.strokeStyle = "black";
     // context.stroke();
 
+    context.shadowOffsetX = 5;
+    context.shadowOffsetY = 5;
+    context.shadowBlur = 25;
+    context.shadowColor = 'rgba(0, 0, 0, 0.5)';
     context.drawImage(routerIcon, node.x - 50, node.y - 50, 100, 100);
+
+    context.shadowOffsetX = 0;
+    context.shadowOffsetY = 0;
+    context.shadowBlur = 0;
 
     context.fillStyle = "white";
     context.textAlign = 'center'
