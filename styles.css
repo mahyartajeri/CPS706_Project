@@ -18,20 +18,23 @@ button{
 
 
 .table-striped thead {
-    background-color: rgba(146,55,55,0.7);
+    background-color: rgba(146,55,55,0.8);
     color: white;
   }
 .table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(146,55,55,0.4);
-    color: white;
-  }
-  
-
-
-  .table-striped tbody tr:nth-of-type(even) {
-    background-color: rgba(146,55,55,0.6);;
+    background-color: rgba(146,55,55,0.6);
     color: white;
 }
+  
 
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: white;
+    color: rgba(146,55,55,1);
+}
+
+.tertiary{
+    background-color: white;
+    color: rgba(146,55,55,1);
+}
   
   
