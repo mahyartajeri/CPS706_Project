@@ -268,6 +268,7 @@ randomGraphButton.addEventListener("click", () => {
         })
     }
     console.log(isConnected());
+    initializeDv();
     draw();
 })
 
