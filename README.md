@@ -7,7 +7,7 @@
 - [x] Add Djikstra
 - [x] Add Bellman-Ford
 - [x] Animate Djikstra 
-- [x Animate Bellman-Ford 
-- [x]Implement cost calculation for data transfer between nodes
+- [x] Animate Bellman-Ford 
+- [x] Implement cost calculation for data transfer between nodes
 - [ ] Test and debug the application
 - [ ] Add additional features (if time permits)
