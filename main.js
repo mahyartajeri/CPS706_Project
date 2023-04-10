@@ -283,11 +283,16 @@ centralize.addEventListener("click", () => {
     if (!isNaN(start) && !isNaN(end) &&
         start >= 0 && start < nodes.length &&
         end >= 0 && end < nodes.length && start != end) {
-        let paths = RunDijkstra(start, end);
-        if (paths === "error") {
+        if (negativeEdges()) {
+            alert("Djikstra's Algorithim isn't meant for graphs with negative edges!");
+            return;
+        }
+        if (!isConnected()) {
             alert("Please use a connected graph for Djikstra's Algorithim");
             return;
         }
+        let paths = RunDijkstra(start, end);
+
 
         animationStack = animationStack.concat(paths.searching.reverse());
         infoTableStacks = {
@@ -628,7 +633,6 @@ function draw() {
 
 function RunDijkstra(start, end) {
     initializeDijstra(start);
-    if (!isConnected()) return "error";
 
     let current = start;
 
@@ -803,6 +807,15 @@ function dfs(node, visited, adjacencyList) {
             dfs(neighbor, visited, adjacencyList);
         }
     }
+}
+
+function negativeEdges() {
+    let found = false;
+    edges.forEach(edge => {
+        if (edge.cost < 0) found = true;
+    })
+
+    return found;
 }
 
 
