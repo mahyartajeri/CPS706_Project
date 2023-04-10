@@ -1,5 +1,9 @@
+body{
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
 canvas {
-    border: 1px solid black;
+    border: 2px solid rgba(146,55,55,1);
     cursor: pointer;
     margin-top: 20px;
 }
@@ -7,3 +11,27 @@ canvas {
 button{
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
+
+.secondary{
+    background-color: rgba(146,55,55,1);
+}
+
+
+.table-striped thead {
+    background-color: rgba(146,55,55,0.7);
+    color: white;
+  }
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(146,55,55,0.4);
+    color: white;
+  }
+  
+
+
+  .table-striped tbody tr:nth-of-type(even) {
+    background-color: rgba(146,55,55,0.6);;
+    color: white;
+}
+
+  
+  

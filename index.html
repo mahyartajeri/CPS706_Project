@@ -34,10 +34,14 @@
             </nav>
         </header>
         <section class="container-fluid pt-5 mt-4">
-            <h1 class="display-3 text-center">Sandbox</h1>
-            <div class="row">
+            <div class="row shadow mb-3 mx-3 secondary text-white">
+                <h1 class="display-3 text-center col-12">Sandbox</h1>
+            </div>
+            <div class="row mx-3">
                 <div class="col-xxl-8 border shadow">
-                    <h2>Network Editor</h2>
+                    <div class="row secondary text-white py-3">
+                        <h2 class="col-12">Network Editor</h2>
+                    </div>
                     <canvas id="canvas" width="900" height="600" class="shadow"></canvas>
                     <div class="py-3 row">
                         <div class="col-12">
@@ -63,14 +67,16 @@
                     </div>
                 </div>
 
-                <div class="col-xl-4 border shadow">
-                    <h2>Algorithm Tracker</h2>
-                    <p>Run an algorithm and track it below.</p>
+                <div class="col-xxl-4 border shadow secondary text-white">
+                    <div class="row py-3">
+                        <h2 class="col-12">Algorithm Tracker</h2>
+                        <p>Run an algorithm and track it below.</p>
+                    </div>
                     <div id="infoDiv" style="display:none;">
                         <h3 id="infoTitle"></h3>
                         <h5 id="infoParameters" class="text-decoration-underline"></h5>
                         <div id="tableDiv">
-                            <table id="infoTable" class="border table table-striped px-5 shadow">
+                            <table id="infoTable" class="bg-white border table table-striped shadow">
                                 <thead>
                                     <tr>
                                         <th>Vertex</th>

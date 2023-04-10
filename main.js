@@ -165,10 +165,14 @@ function getNodeIndex(x, y) {
 }
 
 canvas.addEventListener("mousedown", event => {
+    if (running) {
+        alert("Can't edit Network while animating!\nPress the \"Exit Animation\" Button to make Network editable.");
+        return;
+    }
     const x = event.offsetX;
     const y = event.offsetY;
     const nodeIndex = getNodeIndex(x, y);
-    if (nodeIndex !== -1 && !running) {
+    if (nodeIndex !== -1) {
         draggingNode = nodes[nodeIndex];
         lastAction = {
             type: "dragNode",
@@ -295,7 +299,7 @@ centralize.addEventListener("click", () => {
         toggleAnimationMode();
 
         animationCallback = (ans = paths.answer) => {
-            ans.forEach(i => edges[i].color = "green");
+            ans.forEach(i => edges[i].color = "gold");
             draw();
         }
     }
@@ -362,7 +366,7 @@ function animateEdge() {
         finishAnimation();
         return;
     }
-    edges[animationStack.pop()].color = "red";
+    edges[animationStack.pop()].color = "rgba(146,55,55,1)";
     draw();
 }
 
