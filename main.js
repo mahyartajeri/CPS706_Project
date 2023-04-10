@@ -1,7 +1,8 @@
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 
-context.font = "20pt Consolas"
+context.font = "20pt Consolas";
+let routerIcon;
 
 const nodes = [{
         "x": 157,
@@ -24,7 +25,7 @@ const nodes = [{
         "size": 50
     },
     {
-        "x": 750,
+        "x": 800,
         "y": 250,
         "size": 50
     },
@@ -34,7 +35,7 @@ const nodes = [{
         "size": 50
     },
     {
-        "x": 750,
+        "x": 800,
         "y": 100,
         "size": 50
     }
@@ -43,73 +44,73 @@ const edges = [{
         "start": 0,
         "end": 1,
         "cost": 3,
-        "color": "black",
+        "color": "gray",
     },
     {
         "start": 0,
         "end": 3,
         "cost": 9,
-        "color": "black",
+        "color": "gray",
     },
     {
         "start": 0,
         "end": 2,
         "cost": 1,
-        "color": "black",
+        "color": "gray",
     },
     {
         "start": 1,
         "end": 3,
         "cost": 1,
-        "color": "black",
+        "color": "gray",
     },
     {
         "start": 2,
         "end": 3,
         "cost": 4,
-        "color": "black",
+        "color": "gray",
     },
     {
         "start": 4,
         "end": 5,
         "cost": 4,
-        "color": "black",
+        "color": "gray",
     },
     {
         "start": 5,
         "end": 6,
         "cost": 5,
-        "color": "black",
+        "color": "gray",
     },
     {
         "start": 6,
         "end": 4,
         "cost": 9,
-        "color": "black",
+        "color": "gray",
     },
     {
         "start": 5,
         "end": 2,
         "cost": 4,
-        "color": "black",
+        "color": "gray",
     },
     {
         "start": 5,
         "end": 5,
         "cost": 3,
-        "color": "black",
+        "color": "gray",
     },
     {
         "start": 1,
         "end": 0,
         "cost": 1,
-        "color": "black",
+        "color": "gray",
     },
     {
         "start": 5,
         "end": 6,
         "cost": 3,
-        "color": "black",
+        "color": "gray",
     }
 ];
 
@@ -130,6 +131,7 @@ const exitButton = document.getElementById("exitButton");
 // Animation Info Div
 const animationInfoDiv = document.getElementById("infoDiv");
 const infoTitle = document.getElementById("infoTitle");
+const infoParameters = document.getElementById("infoParameters");
 const infoTable = document.querySelector("#infoTable tbody");
 
 // Animation globals
@@ -226,9 +228,9 @@ randomGraphButton.addEventListener("click", () => {
 
     actions.push(lastAction);
 
-    const numNodes = Math.floor(Math.random() * 12 + 3)
+    const numNodes = Math.floor(Math.random() * 10 + 3)
     const minDistance = 100;
-    const margin = 50;
+    const margin = 100;
     const innerWidth = canvas.width - margin * 2;
     const innerHeight = canvas.height - margin * 2;
     for (let i = 0; i < numNodes; i++) {
@@ -258,7 +260,7 @@ randomGraphButton.addEventListener("click", () => {
             start: Math.floor(Math.random() * numNodes),
             end: Math.floor(Math.random() * numNodes),
             cost: Math.floor(Math.random() * maxCost),
-            color: "black",
+            color: "gray",
         })
     }
     console.log(isConnected());
@@ -288,6 +290,7 @@ centralize.addEventListener("click", () => {
             predecessorStack: paths.predecessorHistory.reverse()
         }
         infoTitle.innerHTML = "Djikstra Table (LIVE)";
+        infoParameters.innerHTML = "Start: <b>N" + start + "</b> End: <b>N" + end + "</b>";
 
         toggleAnimationMode();
 
@@ -310,12 +313,15 @@ decentralize.addEventListener("click", () => {
             predecessorStack: info.predecessorHistory.reverse()
         }
         infoTitle.innerHTML = "Bellman-Ford Table (LIVE)";
+        infoParameters.innerHTML = "Start: <b>N" + start + "</b>";
         toggleAnimationMode();
 
         animationCallback = (costs = info.distances) => {
             nodes.forEach((node, i) => {
-                context.fillStyle = "green";
-                context.textAlign = 'center'
+                context.fillStyle = "rgba(255, 255, 255, 0.7)";
+                context.fillRect(node.x - 35, node.y, 140, 50);
+                context.fillStyle = "black";
+                context.textAlign = 'center';
                 context.fillText("Cost: " + costs[i], node.x + 35, node.y + 35);
             })
         }
@@ -427,7 +433,7 @@ stepButton.addEventListener("click", () => {
 
 exitButton.addEventListener("click", () => {
     toggleAnimationMode();
-    edges.forEach(edge => edge.color = "black");
+    edges.forEach(edge => edge.color = "gray");
     draw();
 })
 
@@ -446,7 +452,7 @@ addEdgeButton.addEventListener("click", () => {
             start,
             end,
             cost,
-            color: "black",
+            color: "gray",
         };
         edges.push(edge);
         console.log(DVgraph);
@@ -539,20 +545,23 @@ document.addEventListener("keydown", event => {
 
 function drawNode(node) {
     context.lineWidth = 1;
-    context.beginPath();
-    context.arc(node.x, node.y, node.size / 2, 0, 2 * Math.PI);
+    // context.beginPath();
+    // context.arc(node.x, node.y, node.size / 2, 0, 2 * Math.PI);
+    // context.fillStyle = "white";
+    // context.fill();
+    // context.strokeStyle = "black";
+    // context.stroke();
+
+    context.drawImage(routerIcon, node.x - 50, node.y - 50, 100, 100);
+
     context.fillStyle = "white";
-    context.fill();
-    context.strokeStyle = "black";
-    context.stroke();
-    context.fillStyle = "black";
     context.textAlign = 'center'
     context.fillText("N" + nodes.indexOf(node), node.x, node.y + node.size / 6);
 
 }
 
 function drawEdge(edge) {
-    edge.color != "black" ? context.lineWidth = 5 : context.lineWidth = 1;
+    edge.color != "gray" ? context.lineWidth = 8 : context.lineWidth = 5;
     context.strokeStyle = edge.color;
     const start = nodes[edge.start];
     const end = nodes[edge.end];
@@ -583,14 +592,14 @@ function drawEdge(edge) {
         //context.rotate(angle);
         context.fillStyle = "white";
         context.fillRect(-textWidth / 2 - 10, -10, 20, 20);
-        context.fillStyle = "black";
+        context.fillStyle = "gray";
         context.fillText(text, -textWidth / 2, 7);
         context.restore();
 
     }
     // Self Edge
     else {
-        context.fillStyle = "black";
+        context.fillStyle = "gray";
         context.beginPath();
         context.ellipse(start.x + 25, start.y + 25, 30 + 15 * index, 25 + 15 * index, Math.PI / 4, 0, Math.PI * 2);
         context.stroke();
@@ -872,6 +881,18 @@ function initializeDv() {
         }
     })
 }
-initializeDv();
-draw();
-draw();
+
+function setup() {
+    initializeDv();
+    draw();
+    draw();
+}
+
+function init() {
+    routerIcon = new Image();
+    routerIcon.src = "assets/router.png";
+    routerIcon.onload = function () {
+        setup();
+    }
+}
+init();

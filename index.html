@@ -12,56 +12,82 @@
         <link rel="stylesheet" href="styles.css">
     </head>
 
-    <body class="container-fluid">
-        <div class="row">
-            <div class="col-xxl-8 border">
-                <h1>Network Editor</h1>
-                <canvas id="canvas" width="900" height="600"></canvas>
-                <div class="py-3 row">
-                    <div class="col-12">
-                        <button class="btn btn-info" id="randomGraph">Generate Random Graph</button>
-                        <button class="btn btn-primary" id="addEdge">Add Edge</button>
-                        <button class="btn btn-warning " id="undo">Undo</button>
-                        <button class="btn btn-danger" id="clear">Clear</button>
-                        <button class="btn btn-secondary" id="run_Dijkstra_algorithm">Dijkstra (Centralized routing
-                            Algorithm)
-                        </button>
-                        <button class="btn btn-dark" id="run_Bellman_algorithm"> Bellman-Ford (Decentralized routing
-                            Algorithm)</button>
+    <body>
+        <header class="sec text-uppercase">
+            <nav class="navbar navbar-light bg-light navbar-expand fixed-top">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="index.html">Routing 101</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="true"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse navbar-left" id="navbarNavAltMarkup">
+                        <div class="navbar-nav">
+                            <a class="nav-link" aria-current="page" href="index.html">Sandbox</a>
+                            <a class="nav-link" href="tutorial.html">Tutorial</a>
+                            <a class="nav-link" href="about.html">About Us</a>
+
+                        </div>
                     </div>
                 </div>
-                <div class="py-3 row">
-                    <div class="col-12">
-                        <button class="btn btn-success" id="stepButton" style="display: none;">Step</button>
-                        <button class="btn btn-danger" id="exitButton" style="display: none;">Exit Animation</button>
+            </nav>
+        </header>
+        <section class="container-fluid pt-5 mt-4">
+            <h1 class="display-3 text-center">Sandbox</h1>
+            <div class="row">
+                <div class="col-xxl-8 border shadow">
+                    <h2>Network Editor</h2>
+                    <canvas id="canvas" width="900" height="600" class="shadow"></canvas>
+                    <div class="py-3 row">
+                        <div class="col-12">
+                            <button class="btn btn-outline-info" id="randomGraph">Generate Random Graph</button>
+                            <button class="btn btn-outline-primary" id="addEdge">Add Edge</button>
+                            <button class="btn btn-outline-warning " id="undo">Undo</button>
+                            <button class="btn btn-outline-danger" id="clear">Clear</button>
+                            <button class="btn btn-outline-secondary" id="run_Dijkstra_algorithm">Dijkstra (Centralized
+                                routing
+                                Algorithm)
+                            </button>
+                            <button class="btn btn-outline-dark" id="run_Bellman_algorithm"> Bellman-Ford (Decentralized
+                                routing
+                                Algorithm)</button>
+                        </div>
+                    </div>
+                    <div class="py-3 row">
+                        <div class="col-12">
+                            <button class="btn btn-outline-success" id="stepButton" style="display: none;">Step</button>
+                            <button class="btn btn-danger" id="exitButton" style="display: none;">Exit
+                                Animation</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 border shadow">
+                    <h2>Algorithm Tracker</h2>
+                    <p>Run an algorithm and track it below.</p>
+                    <div id="infoDiv" style="display:none;">
+                        <h3 id="infoTitle"></h3>
+                        <h5 id="infoParameters" class="text-decoration-underline"></h5>
+                        <div id="tableDiv">
+                            <table id="infoTable" class="border table table-striped px-5 shadow">
+                                <thead>
+                                    <tr>
+                                        <th>Vertex</th>
+                                        <th>Distance</th>
+                                        <th>Predecessor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-xl-4">
-                <h1>Algorithm Tracker</h1>
-                <p>Run an algorithm and track it below.</p>
-                <div id="infoDiv" style="display:none;">
-                    <h3 id="infoTitle"></h3>
-                    <div id="tableDiv">
-                        <table id="infoTable" class="table table-striped px-5">
-                            <thead>
-                                <tr>
-                                    <th>Vertex</th>
-                                    <th>Distance</th>
-                                    <th>Predecessor</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div>
-        </div>
+        </section>
         <script src="main.js"></script>
     </body>
 
