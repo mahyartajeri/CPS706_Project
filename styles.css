@@ -21,6 +21,12 @@ figcaption {
     width: 60%;
 }
 
+@media (max-width: 900px) {
+    .main {
+      width: 100%; /* This style will override the previous font-size on screens narrower than 768px */
+    }
+  }
+
 .tutorial-image{
     max-width: 80%;
     min-width: 150px;
