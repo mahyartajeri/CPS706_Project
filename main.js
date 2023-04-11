@@ -450,9 +450,9 @@ exitButton.addEventListener("click", () => {
 
 
 addEdgeButton.addEventListener("click", () => {
-    const start = parseInt(prompt("Enter start node index:"));
+    const start = parseInt(prompt("Enter start node index:").match(/\d+/)[0]);
 
-    const end = parseInt(prompt("Enter end node index:"));
+    const end = parseInt(prompt("Enter end node index:").match(/\d+/)[0]);
 
     const cost = parseInt(prompt("Enter edge cost:"));
 

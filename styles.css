@@ -12,6 +12,63 @@ button{
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
 
+figcaption {
+    font-style: italic;
+    text-align: center;
+}
+
+.main{
+    width: 60%;
+}
+
+.tutorial-image{
+    max-width: 80%;
+    min-width: 150px;
+}
+
+.table-of-contents{
+    color:rgba(146,55,55,1);
+}
+
+.table-of-contents > li > a{
+    color: rgba(146,55,55,1);
+    font-size: 20pt;
+    text-decoration: none;
+    padding: 5px;
+
+    transition: background-color 0.5s, color 0.5s;
+}
+
+.table-of-contents > li > a:hover{
+    background-color: rgba(146,55,55,1);
+    color: white;
+}
+
+.table-of-contents > li > ol > li > a{
+    color: rgba(146,55,55,1);
+    font-size: 15pt;
+    text-decoration: none;
+    padding: 5px;
+
+    transition: background-color 0.5s, color 0.5s;
+}
+
+.table-of-contents > li > ol > li > a:hover{
+    background-color: rgba(146,55,55,1);
+    color: white;
+}
+
+.up-button{
+    min-width: 200px;
+    font-size: 30pt;
+    color: rgba(146,55,55,1);
+    border: 1px solid rgba(146,55,55,1);;
+}
+
+.up-button:hover{
+    background-color: rgba(146,55,55,1);;
+}
+
 .secondary{
     background-color: rgba(146,55,55,1);
 }

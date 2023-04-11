@@ -36,16 +36,253 @@
             </nav>
         </header>
 
-        <div class="container-fluid pt-5 mt-5 px-5">
-            <div class="row">
+        <div class="container-fluid pt-5 mt-5 main">
+            <div class="row shadow">
                 <div class="col-12 border">
-                    <div class="row secondary text-white">
-                        <h3 class="col-12">Overview</h3>
+                    <div class="row tertiary text-center p-3">
+                        <h1 class="col-12 display-1">Tutorial</h1>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-8 border">swag</div>
+            <div class="row py-3">
+                <div class="col-12 border shadow">
+                    <div class="col-12r">
+                        <div class="row tertiary px-5 pt-5">
+                            <h1 class="col-12 p-5">Table of Contents</h1>
+                        </div>
+                        <div class="row d-flex px-5">
+                            <div class="col-12 px-5">
+                                <ol class="table-of-contents">
+                                    <li>
+                                        <a href="#running">Running the Algorithms</a>
+                                        <ol type="a">
+                                            <li><a href="#initiating">Initiating the Algorithm</a></li>
+                                            <li><a href="#traversing">Traversing Through the Algorithm</a></li>
+                                            <li><a href="#wrapping">Wrapping-Up the Algorithm</a></li>
+                                        </ol>
+                                    </li>
+                                    <li>
+                                        <a href="#editing">Editing the Network</a>
+                                        <ol type="a">
+                                            <li><a href="#clearing">Clearing the Network</a></li>
+                                            <li><a href="#node_creation">Node Creation</a></li>
+                                            <li><a href="#edge_creation">Edge Creation</a></li>
+                                            <li><a href="#random">Random Network Creation</a></li>
+                                            <li><a href="#undo">Undo-ing</a></li>
+                                        </ol>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="row tertiary px-5 pt-5">
+                            <h1 id="running" class="col-12 p-5">Running the Algorithms</h1>
+                        </div>
+                        <div class="row d-flex px-5">
+                            <div class="col-12 px-5">
+                                <p>The sandbox is an interactable and customizeable tool designed as an educational look
+                                    for routing algorithms. The two algorithms provide are
+                                    <ul>
+                                        <li><a>Dijkstra's
+                                                Algorithm</a> (Centralized)</li>
+                                        <li><a>Bellman-Ford's algoritm</a> (Decentralized)</li>
+                                    </ul>
+                                </p>
+                                <h3 id="initiating">Initiating the Algorithm</h3>
+                                <p>To get started, simply click the "Run Dijkstra" button or the "Run Bellman-Ford"
+                                    button to run each respective algorithm.
+                                </p>
+                                <figure class="text-center">
+                                    <img class="rounded-3" src="assets/algo_buttons.png">
+                                    <figcaption>Algorithm Buttons</figcaption>
+                                </figure>
+
+                                <p>After you clicked either button, depending on the algorithm you selected, either one
+                                    or two pop-up boxes will appear asking for information.
+                                </p>
+
+                                <p>If you chose Djikstra's algorithm, then two pop-ups will appear, asking for the start
+                                    and end node respectively:
+                                </p>
+
+
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/start.png">
+                                    <figcaption>Start Node Pop-up</figcaption>
+                                </figure>
+
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/end.png">
+                                    <figcaption>End Node Pop-up</figcaption>
+                                </figure>
+                                <p>
+                                    Otherwise if you choose Bellman-Ford's algorithm, then it will only ask for the
+                                    start
+                                    node. Please enter an integer corresponding to the node number on the sandbox. You
+                                    can also type "N5" for example for Node number 5, but just 5 will do. Indexes start
+                                    at 0.
+                                </p>
+                                <figure class="text-center">
+                                    <img class="rounded-pill tutorial-image" src="assets/node.png">
+                                    <figcaption>Node as it Appears on the Sandbox</figcaption>
+                                </figure>
+                                <h3 id="traversing">Traversing Through the Algorithm</h3>
+                                <p>
+                                    Once you have entered the input information (correctly I hope), The sandbox will
+                                    enter animation mode, which will visually display the chosen algorithm step by step.
+                                    To facilitate this use the animation control buttons that will appear once the
+                                    sanbox is put in animation mode.
+                                </p>
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/animation_buttons.png">
+                                    <figcaption>Animation Control Buttons</figcaption>
+                                </figure>
+                                <p>You should now also see a table appear under the "Algorithm Tracker section" which
+                                    details the current trace of the selected algorithm.
+                                </p>
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/table_before.png">
+                                    <figcaption>Alogrithm Tracker Table Upon Start of Bellman-Ford Algorithm
+                                    </figcaption>
+                                </figure>
+                                <p>By pressing the "Step" button, it will proceed one step in the chosen algorith,
+                                    updating the table and also providing a visual representation in the sandbox.
+                                </p>
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/table_after.png">
+                                    <figcaption>
+                                        Alogrithm Tracker Table After One Step of Bellman-Ford Algorithm
+                                    </figcaption>
+                                </figure>
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/sandbox_1.png">
+                                    <figcaption>
+                                        Sandbox After One Step of Bellman-Ford Algorithm. Note the Highlighted Edge
+                                    </figcaption>
+                                </figure>
+                                <h3 id="wrapping">Wrapping-Up the Algorithm</h3>
+                                <p>You can continue to press the "Step" button to go through the chosen algorithm until
+                                    it finishes. By then, the sandbox will show the result of the algorithm and the
+                                    table will be completed. You can then press the "Exit Animation" button to leave
+                                    animation mode
+                                    and return back to edit mode.
+                                </p>
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/sandbox_2.png">
+                                    <figcaption>
+                                        Sandbox After Completion of the Bellman-Ford Algorithm. The Cost of Each
+                                        Node from the Start Node is Displayed
+                                    </figcaption>
+                                </figure>
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/sandbox_3.png">
+                                    <figcaption>
+                                        Sandbox After Completion of Dijkstra's Algorithm. The Optimal Path from the
+                                        Start Node to the End Node is Highlighted in Gold
+                                    </figcaption>
+                                </figure>
+                                <p>
+                                    Once animation mode is exited, you can edit the network and run another algorithm.
+                                    Have fun!
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row tertiary px-5 pt-5">
+                            <h1 id="editing" class="col-12 p-5">Editing the Network</h1>
+                        </div>
+                        <div class="row d-flex px-5">
+                            <div class="col-12 px-5">
+                                <p>By default, there will be a pre-made network made for you when you load the page, but
+                                    it's called a "sandbox" for a reason.
+                                </p>
+                                <h3 id="clearing">Clearing the Network</h3>
+                                <p>Press the "Clear" button to wipe the network</p>
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/clear_button.png">
+                                    <figcaption>
+                                        Clear Button
+                                    </figcaption>
+                                </figure>
+                                <h3 id="node_creation">Node Creation</h3>
+                                <p>To add a node to the network, simply click any where in the network editor</p>
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/node_creation.gif">
+                                    <figcaption>
+                                        Node Creation
+                                    </figcaption>
+                                </figure>
+                                <p>You can also drag nodes anywhere on the network editor</p>
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/dragging.gif">
+                                    <figcaption>
+                                        Node Dragging
+                                    </figcaption>
+                                </figure>
+                                <h3 id="edge_creation">Edge Creation</h3>
+                                <p>
+                                    To create an edge, click the "Add Edge" Button. You will be prompted for the start
+                                    and end node of the edge. Please enter an integer corresponding to the node number
+                                    on the sandbox. You
+                                    can also type "N5" for example for Node number 5, but just 5 will do. Indexes start
+                                    at 0. A third pop-up will also appear for the edge cost. Please enter an integer.
+                                    Note that the order of the start and end nodes do not matter since the network
+                                    is bidirectional.
+                                </p>
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/add_edge_button.png">
+                                    <figcaption>
+                                        Add Edge Button
+                                    </figcaption>
+                                </figure>
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/add_edge.gif">
+                                    <figcaption>
+                                        Edge Creation
+                                    </figcaption>
+                                </figure>
+                                <h3 id="random">Random Network Creation</h3>
+                                <p>
+                                    If you are not feeling creative, you can also press the "Randomize button to
+                                    generate
+                                    a network for you. Note you can still edit a generated network however you want.
+                                </p>
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/randomize_button.png">
+                                    <figcaption>
+                                        Randomize Button
+                                    </figcaption>
+                                </figure>
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/random_network.png">
+                                    <figcaption>
+                                        Randomly Generated Network
+                                    </figcaption>
+                                </figure>
+                                <h3 id="undo">Undo-ing</h3>
+                                <p>
+                                    To undo any action (adding a node, dragging a node, adding an edge, clearing the
+                                    network, generating a random network) simply press the "Undo" button
+                                    <b><u>OR</u></b>
+                                    press
+                                    <code>Ctrl + Z</code> on your keyboard
+                                </p>
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/undo_button.png">
+                                    <figcaption>
+                                        Undo Button
+                                    </figcaption>
+                                </figure>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="row py-5">
+                    <div class="col-12 text-center">
+                        <button onclick="location.href='#'"
+                            class="btn btn-lg btn-outline-dark up-button">&#x2B99</button>
+                    </div>
+                </div>
             </div>
 
         </div>
