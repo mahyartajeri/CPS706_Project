@@ -465,7 +465,6 @@ addEdgeButton.addEventListener("click", () => {
             color: "gray",
         };
         edges.push(edge);
-        console.log(DVgraph);
         DVgraph[start][end] = cost;
         DVgraph[end][start] = cost;
         lastAction = {
