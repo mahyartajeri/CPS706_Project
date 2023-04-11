@@ -520,6 +520,7 @@ undoButton.addEventListener("click", () => {
                 break;
         }
         lastAction = null;
+        initializeDv();
         draw();
     }
 });
@@ -547,6 +548,7 @@ document.addEventListener("keydown", event => {
                     break;
             }
             lastAction = null;
+            initializeDv();
             draw();
         }
     }
