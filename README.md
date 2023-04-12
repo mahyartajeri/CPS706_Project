@@ -1,4 +1,6 @@
 # CPS706_Project
+# Live Website: https://mahyartajeri.github.io/CPS706_Project/
+
 # Todo List
 - [x] Create Basic UI and about page
 - [x] Write code for drag and drop functionality
