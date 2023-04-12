@@ -127,9 +127,9 @@
                                     storing edge relations to each node, putting them in lists. Starting from the identified start
                                     node, the nodes communicate with each other, passing information about what the costs of its edges
                                     are and where they connect and through an iterative process coordinate the most cost-efficient 
-                                    path to the destination node. This algorithm also follows the same forwarding table rules, marking
-                                    down the nodes and costs associated as it routes from start to finish. Unlike Dijkstra, no 
-                                    back-tracking is done and in addition since Bellman-Ford follows a decentralized model it can handle
+                                    path to the destination node. This algorithm also follows the same forwarding table rules as
+                                    Dijkstra, marking down the nodes and costs associated as it routes from start to finish. Unlike Dijkstra,
+                                    no back-tracking is done and in addition since Bellman-Ford follows a decentralized model it can handle
                                     negative edge costs as well. However, for the purpose of network routing there will not be any 
                                     contexts that involve a negative edge cost. 
                                 </p>
