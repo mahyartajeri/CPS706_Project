@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+        </script>
+        <meta charset="utf-8">
+        <title>Network Routing Simulator</title>
+        <link rel="stylesheet" href="styles.css" type="text/css">
+    </head>
+
+    <body>
+        <header class="sec text-uppercase">
+            <nav class="navbar navbar-light bg-light navbar-expand fixed-top">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="routing.html">Routing 101</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="true"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse navbar-left" id="navbarNavAltMarkup">
+                        <div class="navbar-nav">
+                            <a class="nav-link" aria-current="page" href="index.html">Sandbox</a>
+                            <a class="nav-link" href="tutorial.html">Tutorial</a>
+                            <a class="nav-link" href="about.html">About Us</a>
+
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        
+        <div class="container-fluid pt-5 mt-5 main">
+            <div class="row shadow">
+                <div class="col-12 border">
+                    <div class="row tertiary text-center p-3">
+                        <h1 class="col-12 display-1">Computer Networks Routing Algorithms Tool</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="row py-3">
+                <div class="col-12 border shadow">
+                    <div class="col-12">
+                        <div class="row tertiary px-5 pt-5">
+                            <div class="col-12 text-center">
+                                <h1>Welcome to Our Interactive Learning Tool!</h1>
+                                <h2 class="col-12 p-5">This is an educational interactive tool designed to help students better understand routing algorithms.
+                                    With our tool, users can create a network and explore two distinct routing algorithms. Our user-friendly interface provides
+                                    students with an improved visualization experience, allowing them to gain a deeper understanding of routing algorithm concepts.</h2>
+                            </div>
+                            
+                        </div>
+
+                        <div class="row d-flex px-5">
+                            <div class="col-12 px-5">
+                                <ol class="table-of-contents text-center">
+                                    <p><a href="#running">1. Centralized Algorithm</a></p>
+                                    <p><a href="#editing">2. Decentralized Algorithm</a></p> 
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="row tertiary px-5 pt-5">
+                            <h1 id="running" class="col-12 p-5">Centralized Algorithm Explained</h1>
+                        </div>
+                        <div class="row d-flex px-5">
+                            <div class="col-12 px-5">
+                                <p>Centralized algorithms are algorithms that revolve around the starting node and create a 
+                                    coordinate system which maps the entire network. The mapping system defines all the nodes and
+                                    all the edges in the network in relation to the starting node, and iterates through the lists 
+                                    of nodes and edges starting from the closest nodes to the starting node, until it reaches 
+                                    the end node.
+                                </p>  
+                                <h3 id="initiating">Dijkstra's Algorithm</h3>
+                                <p>Dijkstra's Algorithm is a centralized Link-State algorithm used to find the path of shortest
+                                    cost between two nodes and is widely used for network routing. It works by retreiving all
+                                    the costs between the nodes on the network, putting them in lists and iteratively sorting and 
+                                    selecting the smallest cost that is connected to each node starting from the edges connected to
+                                    the starting node and continuing from there. The algorithm updates a forwarding table, keeping
+                                    a record of and printing the nodes previously used and the costs of the paths to connect them 
+                                    as it iterates closer to the last node. The table will be populated in order of nodes visited from
+                                    the first node to the last node and will be the most cost-efficient path possible.
+                                </p>
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/sandbox_3.png">
+                                    <figcaption>Network Example</figcaption>
+                                </figure>
+                                <p>The step-by-step process goes as follows:
+                                    <ul>
+                                        <li>Initialize the lists containing all the edges and the nodes connected to them, set the
+                                                forwarding table distance from the starting node to 0, and set the rest to infinity for now.
+                                        </li>
+                                        <li>Iterate through, identify and select the least cost path connected to the starting node and 
+                                                add that value to the distance from the starting node. Mark down the node that the edge 
+                                                connects to as visited.
+                                        </li>
+                                        <li>Repeat the step above for the edges connecting to the last visited node and compare the nodes
+                                                next to it. If a more cost-efficient path presents itself, the algorithm 
+                                                would back-track and redefine itself on that new path.   
+                                        </li>
+                                        <li>This algorithm repeats the steps above until reaching the destination node, returning the final 
+                                                forwarding table.                                       
+                                        </li>
+                                    </ul>
+                                </p>
+                                <p>To learn how to use this interactive learning tool, go to our <a href="tutorial.html">Tutorial</a> page. </p>
+                            </div>
+                        </div>
+                        <div class="row tertiary px-5 pt-5">
+                            <h1 id="editing" class="col-12 p-5">Decentralized Algorithm Explained</h1>
+                        </div>
+                        <div class="row d-flex px-5">
+                            <div class="col-12 px-5">
+                                <p>Decentralized algorithms are algorithms that do not only revolve around the starting node 
+                                    but rather as a coordinate system where each node is responsible only for what edges connect 
+                                    it and the nodes communicate with each other using their local information to coordinate the 
+                                    most cost efficient route together to reach the end node starting from the starting node that
+                                    is selected. 
+                                </p>
+                                <h3 id="initiating">Bellman-Ford Algorithm</h3>
+                                <p>The Bellman-Ford Algorithm is a decentralized algorithm used to find the path of shortest
+                                    cost between two nodes and is another type of algorithm used for network routing. It works by
+                                    storing edge relations to each node, putting them in lists. Starting from the identified start
+                                    node, the nodes communicate with each other, passing information about what the costs of its edges
+                                    are and where they connect and through an iterative process coordinate the most cost-efficient 
+                                    path to the destination node. This algorithm also follows the same forwarding table rules, marking
+                                    down the nodes and costs associated as it routes from start to finish. Unlike Dijkstra, no 
+                                    back-tracking is done and in addition since Bellman-Ford follows a decentralized model it can handle
+                                    negative edge costs as well. However, for the purpose of network routing there will not be any 
+                                    contexts that involve a negative edge cost. 
+                                </p>
+                                <figure class="text-center">
+                                    <img class="rounded-3 tutorial-image" src="assets/sandbox_4.png">
+                                    <figcaption>Network Example</figcaption>
+                                </figure>
+
+                                <p>The step-by-step process goes as follows:
+                                    <ul>
+                                        <li>Initialize the lists containing all the edges corresponding to each nodes connected to them 
+                                                and set the forwarding table distance from the starting node to 0 and the rest to infinity 
+                                                for now                                           
+                                        </li>
+                                        <li>Iterate through all the edges of the first node, checking all possible paths to find the lowest
+                                                cost path and once it is identified mark down the node the cost of the selected edge                                             
+                                        </li>
+                                        <li>Go to the next node that connects to the other end of the previousy selected node and repeat the 
+                                                step above for the node you are currently on                             
+                                        </li>
+                                        <li>In the case of negative edges like the ones shown on the image above, the algorithm recognizes
+                                                and works around it by ignoring as a possibility to choose it as the lowest cost edge connecting 
+                                                to the current node it is on     
+                                        </li>
+                                        <li>This algorithm does the steps above until reaching the destination node, returning the final 
+                                                forwarding table  
+                                        </li>
+                                    </ul>
+                                </p>
+                                <p>
+                                <p>To learn how to use this interactive learning tool, go to our <a href="tutorial.html">Tutorial</a> page. </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="row py-5">
+                    <div class="col-12 text-center">
+                        <button onclick="location.href='#'"
+                            class="btn btn-lg btn-outline-dark up-button">&#x2B99</button>
+                    </div>
+                </div>
+           
+            </div>
+        </div>
+        <footer>
+            <div class="col-12 text-center">
+                <p class="copy">&copy; Copyright CPS706 Group 20</p>
+            </div>
+        </footer>
+    </body>
+</html>

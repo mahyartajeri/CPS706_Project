@@ -41,6 +41,22 @@ figcaption {
     color:rgba(146,55,55,1);
 }
 
+.table-of-contents > p > a{
+    color: rgba(146,55,55,1);
+    font-size: 20pt;
+    text-decoration: none;
+    padding: 5px;
+    text-align: center;
+
+    transition: background-color 0.5s, color 0.5s;
+}
+
+.table-of-contents > p > a:hover{
+    background-color: rgba(146,55,55,1);
+    color: white;
+    text-align: center;
+}
+
 .table-of-contents > li > a{
     color: rgba(146,55,55,1);
     font-size: 20pt;
